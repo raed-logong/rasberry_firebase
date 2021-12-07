@@ -48,8 +48,13 @@ if __name__ == '__main__':
     now = datetime.now()
     dt = now.strftime("%d%m%Y%H:%M:%S")
     name = "test.jpg"
+    previous = database.child('images').get()
+    previous = previous.each()[0]
+    previous = previous.val()['name']
 
+    storage.delete(previous,'')
     storage.child(dt + '.jpg').put(name)
     url = storage.child(dt + '.jpg').get_url('')
     print(url)
-    database.child('images').child(dt).set({'path': url})
+    database.child('images').remove()
+    database.child('images').child(dt).set({'name': dt + '.jpg', 'path': url})
